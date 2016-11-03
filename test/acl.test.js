@@ -246,13 +246,15 @@ test('should get allowed permissions', t => {
 	]).then(([role1, role2]) => {
 		return Promise.all([
 			acl.allow(role1, 'article:1', ['read', 'write']),
-			acl.allow(role2, 'photo', ['view', 'delete'])
+			acl.allow(role2, 'photo', ['view', 'delete']),
+			acl.allow('tom', 'report', ['view', 'design']),
 		]).then(() => acl.addUserRoles('tom', [role1, role2]))
-			.then(() => acl.allowedPermissions('tom', ['article:1', 'photo']))
+			.then(() => acl.allowedPermissions('tom', ['article:1', 'photo', 'report']))
 			.then(permissions => {
 				t.deepEqual(permissions, [
 					{'article:1': ['READ', 'WRITE']},
-					{'photo': ['VIEW', 'DELETE']}
+					{'photo': ['VIEW', 'DELETE']},
+					{'report': ['VIEW', 'DESIGN']}
 				]);
 			})
 	});
