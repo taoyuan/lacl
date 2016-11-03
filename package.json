@@ -1,0 +1,51 @@
+{
+  "name": "loopback-component-acls",
+  "version": "0.0.0",
+  "description": "An ACL component for loopback based on role, user and resource",
+  "license": "MIT",
+  "repository": "taoyuan/loopback-component-acls",
+  "author": {
+    "name": "Yuan Tao",
+    "email": "towyuan@outlook.com",
+    "url": "github.com/taoyuan"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "test": "nyc ava -s test/**/*.test.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    ""
+  ],
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "lodash": "^4.16.6",
+    "shortid": "^2.2.6",
+    "strong-globalize": "^2.8.0"
+  },
+  "devDependencies": {
+    "ava": "avajs/ava",
+    "coveralls": "^2.11.14",
+    "loopback": "^2.36.0",
+    "nyc": "^8.3.2",
+    "xo": "^0.17.0"
+  },
+  "xo": {
+    "esnext": true
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  },
+  "ava": {
+    "require": [
+      "./test/init"
+    ]
+  }
+}

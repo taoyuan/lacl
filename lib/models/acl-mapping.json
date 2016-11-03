@@ -1,0 +1,17 @@
+{
+	"name": "AclMapping",
+	"plural": "aclmappings",
+	"base": "PersistedModel",
+	"properties": {
+		"userId": {
+			"type": "string"
+		}
+	},
+	"relations": {
+		"role": {
+			"type": "belongsTo",
+			"model": "AclRole",
+			"foreignKey": "roleId"
+		}
+	}
+}

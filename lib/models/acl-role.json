@@ -1,0 +1,56 @@
+{
+	"name": "AclRole",
+	"plural": "aclroles",
+	"base": "PersistedModel",
+	"properties": {
+		"id": {
+			"type": "string",
+			"id": true,
+			"generated": false
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"description": "string",
+		"created": {
+			"type": "date",
+			"defaultFn": "now"
+		},
+		"modified": {
+			"type": "date",
+			"defaultFn": "now"
+		}
+	},
+	"relations": {
+		"scope": {
+			"type": "belongsTo",
+			"polymorphic": {
+				"idType": "string"
+			}
+		},
+		"inherits": {
+			"type": "referencesMany",
+			"model": "AclRole",
+			"foreignKey": "inheritIds",
+			"options": {
+				"validate": true,
+				"forceId": false
+			}
+		},
+		"mappings": {
+			"type": "hasMany",
+			"model": "AclMapping",
+			"foreignKey": "roleId"
+		},
+		"permissions": {
+			"type": "hasMany",
+			"model": "AclPermission",
+			"polymorphic": "subject"
+		}
+	},
+	"ability": {
+		"actions": ["VIEW", "ASSIGN_MEMBERS", "DEFINE_PERMISSIONS", "DELETE", "ASSIGN_PERMISSIONS", "UPDATE"],
+		"*:leader": "*"
+	}
+}

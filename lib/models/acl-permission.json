@@ -1,0 +1,30 @@
+{
+	"name": "AclPermission",
+	"plural": "aclpermissions",
+	"base": "PersistedModel",
+	"properties": {
+		"id": {
+			"type": "string",
+			"id": true,
+			"generated": false
+		},
+		"actions": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"relations": {
+		"resource": {
+			"type": "belongsTo",
+			"polymorphic": {
+				"idType": "string"
+			}
+		},
+		"subject": {
+			"type": "belongsTo",
+			"polymorphic": {
+				"idType": "string"
+			}
+		}
+	}
+}

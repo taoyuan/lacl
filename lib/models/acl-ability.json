@@ -1,0 +1,19 @@
+{
+	"name": "AclAbility",
+	"plural": "aclabilities",
+	"base": "PersistedModel",
+	"properties": {
+		"resource": {
+			"type": "string",
+			"required": true
+		},
+		"seq": {
+			"type": "number",
+			"default": 1
+		},
+		"actions": {
+			"type": "object"
+		}
+
+	}
+}
