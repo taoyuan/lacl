@@ -9,8 +9,7 @@
 			"generated": false
 		},
 		"actions": {
-			"type": "number",
-			"default": 0
+			"type": ["string"]
 		}
 	},
 	"relations": {

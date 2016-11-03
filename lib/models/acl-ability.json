@@ -7,13 +7,12 @@
 			"type": "string",
 			"required": true
 		},
-		"seq": {
-			"type": "number",
-			"default": 1
-		},
 		"actions": {
-			"type": "object"
+			"type": "array"
+		},
+		"updates": {
+			"type": "number",
+			"default": 0
 		}
-
 	}
 }

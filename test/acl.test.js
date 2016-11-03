@@ -203,7 +203,7 @@ test('should allow', t => {
 			.then(permissions => {
 				t.is(permissions.length, 1);
 				const permission = permissions[0];
-				t.is(permission.actions, 1);
+				t.deepEqual(permission.actions, ['READ']);
 				t.is(permission.resourceType, 'article');
 				t.is(permission.resourceId, '1');
 				t.is(permission.subjectType, Role.modelName);
@@ -222,7 +222,7 @@ test('should disallow', t => {
 			.then(() => Permission.find())
 			.then(permissions => {
 				t.is(permissions.length, 1);
-				t.is(permissions[0].actions, 3);
+				t.deepEqual(permissions[0].actions, ['READ', 'WRITE']);
 				t.is(permissions[0].resourceType, 'article');
 				t.is(permissions[0].resourceId, '1');
 				t.is(permissions[0].subjectType, Role.modelName);
@@ -232,7 +232,7 @@ test('should disallow', t => {
 			.then(() => Permission.find())
 			.then(permissions => {
 				t.is(permissions.length, 1);
-				t.is(permissions[0].actions, 1);
+				t.deepEqual(permissions[0].actions, ['READ']);
 			})
 	});
 });
