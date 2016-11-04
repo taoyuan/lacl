@@ -10,6 +10,10 @@ test.beforeEach(() => {
 	return s.destroyAll();
 });
 
+test.afterEach(() => {
+	return s.destroyAll();
+});
+
 test('should add role user', t => {
 	const {Role} = lacl;
 	const acl = new lacl.Acl();
@@ -64,7 +68,6 @@ test('should remove user roles', t => {
 			})
 	});
 });
-
 
 test('should remove role users', t => {
 	const {Role} = lacl;
@@ -281,29 +284,83 @@ test('should is allowed', t => {
 	});
 });
 
-test('should allowed resources for all resource types', t => {
+test('should get allowed resources for all resource types', t => {
 	const {Role} = lacl;
 	const acl = new lacl.Acl();
 	return Promise.all([
 		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
 		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
 	]).then(([role1, role2]) => {
-		return Promise.all([
-			acl.allow(role1, 'article:1', ['view', 'read', 'write']),
-			acl.allow(role2, 'photo', ['view', 'delete']),
-			acl.allow('tom', 'report', ['view', 'design']),
-			acl.allow('tom', 'photo', ['view', 'update']),
-		]).then(() => acl.addUserRoles('tom', [role1, role2]))
+		return Promise.each([
+			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'photo', ['view', 'delete']),
+			() => acl.allow(role2, 'article:9', []),
+			() => acl.allow('tom', 'report', ['view', 'design']),
+			() => acl.allow('tom', 'photo', ['view', 'update']),
+		], fn => fn())
+			.then(() => acl.addUserRoles('tom', [role1, role2]))
 			.then(() => acl.allowedResources('tom', 'view'))
 			.then(resources => {
 				assert.sameDeepMembers(resources, [
 					{type: 'article', id: '1'},
+					{type: 'article', id: '9'},
 					{type: 'photo', id: null},
 					{type: 'report', id: null}
 				]);
 			});
 	});
 });
+
+test('should get allowed resources for specified type', t => {
+	const {Role} = lacl;
+	const acl = new lacl.Acl();
+	return Promise.all([
+		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
+		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+	], fn => fn()).then(([role1, role2]) => {
+		return Promise.each([
+			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'photo', ['view', 'delete']),
+			() => acl.allow(role2, 'article:9', []),
+			() => acl.allow('tom', 'report', ['view', 'design']),
+		], fn => fn())
+			.then(() => acl.addUserRoles('tom', [role1, role2]))
+			.then(() => acl.allowedResources('tom', 'view', 'article'))
+			.then(resources => {
+				assert.sameDeepMembers(resources, [
+					{type: 'article', id: '1'},
+					{type: 'article', id: '9'}
+				]);
+			});
+	});
+});
+
+test('should get disallowed resources for all resource types', t => {
+	const {Role} = lacl;
+	const acl = new lacl.Acl();
+	return Promise.all([
+		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
+		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'}),
+	]).then(([role1, role2]) => {
+		return Promise.each([
+			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
+			() => acl.allow(role1, 'folder:1', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'photo', ['view', 'delete']),
+			() => acl.allow(role2, 'article:9', []),
+			() => acl.allow('tom', 'report', ['view', 'design']),
+			() => acl.allow('tom', 'photo', ['view', 'update']),
+		], fn => fn())
+			.then(() => acl.addUserRoles('tom', [role2]))
+			.then(() => acl.disallowedResources('tom', 'view'))
+			.then(resources => {
+				assert.sameDeepMembers(resources, [
+					{type: 'article', id: '1'},
+					{type: 'folder', id: '1'},
+				]);
+			});
+	});
+});
+
 
 test('should allowed resources for specified type', t => {
 	const {Role} = lacl;
@@ -312,12 +369,16 @@ test('should allowed resources for specified type', t => {
 		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
 		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
 	]).then(([role1, role2]) => {
-		return Promise.all([
-			acl.allow(role1, 'article:1', ['view', 'read', 'write']),
-			acl.allow(role2, 'photo', ['view', 'delete']),
-			acl.allow('tom', 'report', ['view', 'design']),
-		]).then(() => acl.addUserRoles('tom', [role1, role2]))
-			.then(() => acl.allowedResources('tom', 'view', 'article'))
+		return Promise.each([
+			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
+			() => acl.allow(role1, 'folder:1', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'photo', ['view', 'delete']),
+			() => acl.allow(role2, 'article:9', []),
+			() => acl.allow('tom', 'report', ['view', 'design']),
+			() => acl.allow('tom', 'photo', ['view', 'update']),
+		], fn => fn())
+			.then(() => acl.addUserRoles('tom', [role2]))
+			.then(() => acl.disallowedResources('tom', 'view', 'article'))
 			.then(resources => {
 				assert.sameDeepMembers(resources, [
 					{type: 'article', id: '1'}

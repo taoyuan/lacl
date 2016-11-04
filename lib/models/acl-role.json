@@ -13,13 +13,13 @@
 			"required": true
 		},
 		"description": "string",
-		"created": {
-			"type": "date",
-			"defaultFn": "now"
+		"scopeType": {
+			"type": "string",
+			"default": null
 		},
-		"modified": {
-			"type": "date",
-			"defaultFn": "now"
+		"scopeId": {
+			"type": "string",
+			"default": null
 		}
 	},
 	"relations": {
