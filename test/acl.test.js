@@ -277,8 +277,24 @@ test('should is allowed', t => {
 			.then(() => acl.isAllowed('tom', 'report', ['view']).then(allowed => t.is(allowed, true)))
 			.then(() => acl.isAllowed('tom', 'photo', ['delete']).then(allowed => t.is(allowed, true)))
 			.then(() => acl.isAllowed('tom', 'article:1', ['write']).then(allowed => t.is(allowed, true)))
-			.then(() => acl.isAllowed('tom', 'article', ['write']).then(allowed => t.is(allowed, false)))
+			.then(() => acl.isAllowed('tom', 'article', ['write']).then(allowed => t.is(allowed, true)))
 			.then(() => acl.isAllowed('tom', 'report', ['delete']).then(allowed => t.is(allowed, false)))
+	});
+});
+
+test('should is allowed for the resource that not exited in permission collection', t => {
+	const {Role} = lacl;
+	const acl = new lacl.Acl();
+	return Promise.all([
+		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
+		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+	]).then(([role1, role2]) => {
+		return Promise.all([
+			acl.allow(role1, 'article:1', ['read', 'write']),
+			acl.allow(role2, 'photo', ['view', 'delete']),
+			acl.allow('tom', 'report', ['view', 'design']),
+		]).then(() => acl.addUserRoles('tom', [role1, role2]))
+			.then(() => acl.isAllowed('tom', 'i_am_not_exited_in_permissions', ['view']).then(allowed => t.is(allowed, true)))
 	});
 });
 
