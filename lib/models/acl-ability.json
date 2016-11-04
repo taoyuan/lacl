@@ -5,14 +5,16 @@
 	"properties": {
 		"resource": {
 			"type": "string",
-			"required": true
-		},
-		"actions": {
-			"type": "array"
+			"required": true,
+			"index": true
 		},
 		"updates": {
 			"type": "number",
-			"default": 0
+			"default": 0,
+			"index": true
+		},
+		"actions": {
+			"type": "array"
 		}
 	}
 }

@@ -5,9 +5,11 @@ const Promise = require('bluebird');
 const s = require('../support');
 const acl = require('../..');
 
-test.beforeEach(() => {
-	return s.destroyAll();
-});
+const ctx = {};
+test.before(t => s.setup(ctx));
+test.after(t => s.teardown(ctx));
+
+test.beforeEach(t => s.clearData());
 
 test('should find regular roles', t => {
 	const {Role} = acl;

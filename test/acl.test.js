@@ -6,13 +6,11 @@ const Promise = require('bluebird');
 const s = require('./support');
 const lacl = require('..');
 
-test.beforeEach(() => {
-	return s.destroyAll();
-});
+const ctx = {};
+test.before(t => s.setup(ctx));
+test.after(t => s.teardown(ctx));
 
-test.afterEach(() => {
-	return s.destroyAll();
-});
+test.beforeEach(t => s.clearData());
 
 test('should add role user', t => {
 	const {Role} = lacl;

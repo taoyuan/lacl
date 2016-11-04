@@ -5,12 +5,28 @@ const Promise = require('bluebird');
 const loopback = require('loopback');
 const lacl = require('..');
 
-exports.db = loopback.createDataSource('db', {connector: 'mongodb', database: 'lacl-test'});
+require('../lib/contract').debug = true;
 
-exports.init = function () {
-	_.forEach(lacl.models, model => model.attachTo(exports.db));
+exports.connect = function (ctx) {
+	ctx = ctx || {};
+	const db = ctx.db = loopback.createDataSource('db', {connector: 'mongodb', database: 'lacl-test'});
+	return Promise.resolve(db.automigrate())
+		.then(() => _.forEach(lacl.models, model => model.attachTo(db)))
+		.thenReturn(db);
 };
 
-exports.destroyAll = function () {
+exports.disconnect = function (ctx) {
+	return ctx.db.disconnect();
+};
+
+exports.setup = function (ctx) {
+	return exports.connect(ctx);
+};
+
+exports.teardown = function (ctx) {
+	return exports.clearData().then(() => exports.disconnect(ctx));
+};
+
+exports.clearData = function () {
 	return Promise.map(_.values(lacl.models), model => model.destroyAll());
 };

@@ -1,14 +1,13 @@
 "use strict";
 
 const test = require('ava');
-const Promise = require('bluebird');
 const s = require('./support');
 const acl = require('..');
 const utils = require('../lib/utils');
 
-test.beforeEach(t => {
-	return s.destroyAll();
-});
+const ctx = {};
+test.before(t => s.setup(ctx));
+test.after(t => s.teardown(ctx));
 
 test('should resolve polymorphic for model object', t => {
 	const {Permission, Role} = acl;

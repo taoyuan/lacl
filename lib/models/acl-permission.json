@@ -10,16 +10,32 @@
 		},
 		"actions": {
 			"type": ["string"]
+		},
+		"subjectType": {
+			"type": "string",
+			"index": true
+		},
+		"subjectId": {
+			"type": "string",
+			"index": true
+		},
+		"resourceType": {
+			"type": "string",
+			"index": true
+		},
+		"resourceId": {
+			"type": "string",
+			"index": true
 		}
 	},
 	"relations": {
-		"resource": {
+		"subject": {
 			"type": "belongsTo",
 			"polymorphic": {
 				"idType": "string"
 			}
 		},
-		"subject": {
+		"resource": {
 			"type": "belongsTo",
 			"polymorphic": {
 				"idType": "string"

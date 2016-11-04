@@ -4,7 +4,12 @@
 	"base": "PersistedModel",
 	"properties": {
 		"userId": {
-			"type": "string"
+			"type": "string",
+			"index": true
+		},
+		"roleId": {
+			"type": "string",
+			"index": true
 		}
 	},
 	"relations": {

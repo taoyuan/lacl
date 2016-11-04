@@ -15,11 +15,11 @@
 		"description": "string",
 		"scopeType": {
 			"type": "string",
-			"default": null
+			"index": true
 		},
 		"scopeId": {
 			"type": "string",
-			"default": null
+			"index": true
 		}
 	},
 	"relations": {
@@ -32,7 +32,7 @@
 		"inherits": {
 			"type": "referencesMany",
 			"model": "AclRole",
-			"foreignKey": "inheritIds",
+			"foreignKey": "parentIds",
 			"options": {
 				"validate": true,
 				"forceId": false
