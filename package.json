@@ -1,9 +1,9 @@
 {
-  "name": "loopback-component-acls",
+  "name": "lacl",
   "version": "0.0.0",
-  "description": "An ACL component for loopback based on role, user and resource",
+  "description": "A Light Access Control Lists based on loopback junggler",
   "license": "MIT",
-  "repository": "taoyuan/loopback-component-acls",
+  "repository": "taoyuan/lacl",
   "author": {
     "name": "Yuan Tao",
     "email": "towyuan@outlook.com",

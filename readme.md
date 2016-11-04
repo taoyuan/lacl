@@ -1,4 +1,4 @@
-# loopback-component-acls [![Build Status](https://travis-ci.org/taoyuan/loopback-component-acls.svg?branch=master)](https://travis-ci.org/taoyuan/loopback-component-acls) [![Coverage Status](https://coveralls.io/repos/github/taoyuan/loopback-component-acls/badge.svg?branch=master)](https://coveralls.io/github/taoyuan/loopback-component-acls?branch=master)
+# lacl [![Build Status](https://travis-ci.org/taoyuan/lacl.svg?branch=master)](https://travis-ci.org/taoyuan/lacl) [![Coverage Status](https://coveralls.io/repos/github/taoyuan/lacl/badge.svg?branch=master)](https://coveralls.io/github/taoyuan/lacl?branch=master)
 
 > An ACL component for loopback based on role, user and resource
 
@@ -6,23 +6,23 @@
 ## Install
 
 ```
-$ npm install --save loopback-component-acls
+$ npm install --save lacl
 ```
 
 
 ## Usage
 
 ```js
-const loopbackComponentAcl = require('loopback-component-acls');
+const lacl = require('lacl');
 
-loopbackComponentAcl('unicorns');
+lacl('unicorns');
 //=> 'unicorns & rainbows'
 ```
 
 
 ## API
 
-### loopbackComponentAcl(input, [options])
+### lacl(input, [options])
 
 #### input
 
