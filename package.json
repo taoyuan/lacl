@@ -34,7 +34,7 @@
     "coveralls": "^2.11.14",
     "loopback": "^2.36.0",
     "loopback-connector-mongodb": "^1.17.0",
-    "nyc": "^8.3.2",
+    "nyc": "^8.4.0",
     "xo": "^0.17.0"
   },
   "xo": {

@@ -359,7 +359,6 @@ test('should get disallowed resources for all resource types', t => {
 	});
 });
 
-
 test('should allowed resources for specified type', t => {
 	const {Role} = lacl;
 	const acl = new lacl.Acl();
@@ -384,3 +383,54 @@ test('should allowed resources for specified type', t => {
 			});
 	});
 });
+
+test('should remove all permissions for resource type', t => {
+	const {Role} = lacl;
+	const acl = new lacl.Acl();
+	return Promise.all([
+		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
+		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+	]).then(([role1, role2]) => {
+		return Promise.each([
+			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
+			() => acl.allow(role1, 'folder:1', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'photo', ['view', 'delete']),
+			() => acl.allow(role2, 'article:9', []),
+			() => acl.allow('tom', 'report', ['view', 'design']),
+			() => acl.allow('tom', 'photo', ['view', 'update']),
+		], fn => fn())
+			.then(() => acl.addUserRoles('tom', [role1, role2]))
+			.then(() => acl.removeResource('article'))
+			.then(() => acl.allowedResources('tom', 'view', 'article'))
+			.then(resources => {
+				assert.sameDeepMembers(resources, []);
+			});
+	});
+});
+
+test('should remove all permissions for individual resource', t => {
+	const {Role} = lacl;
+	const acl = new lacl.Acl();
+	return Promise.all([
+		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
+		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+	]).then(([role1, role2]) => {
+		return Promise.each([
+			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
+			() => acl.allow(role1, 'folder:1', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'photo', ['view', 'delete']),
+			() => acl.allow(role2, 'article:9', []),
+			() => acl.allow('tom', 'report', ['view', 'design']),
+			() => acl.allow('tom', 'photo', ['view', 'update']),
+		], fn => fn())
+			.then(() => acl.addUserRoles('tom', [role1, role2]))
+			.then(() => acl.removeResource('article:1'))
+			.then(() => acl.allowedResources('tom', 'view', 'article'))
+			.then(resources => {
+				assert.sameDeepMembers(resources, [
+					{type: 'article', id: '9'}
+				]);
+			});
+	});
+});
+

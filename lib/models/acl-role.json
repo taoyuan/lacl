@@ -50,7 +50,14 @@
 		}
 	},
 	"ability": {
-		"actions": ["VIEW", "ASSIGN_MEMBERS", "DEFINE_PERMISSIONS", "DELETE", "ASSIGN_PERMISSIONS", "UPDATE"],
+		"actions": [
+			"READ",
+			"ASSIGN_MEMBERS",
+			"DEFINE_PERMISSIONS",
+			"ASSIGN_PERMISSIONS",
+			"WRITE",
+			"DELETE"
+		],
 		"*:leader": "*"
 	}
 }
