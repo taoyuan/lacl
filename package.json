@@ -1,6 +1,6 @@
 {
   "name": "lacl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Light Access Control Lists for nodejs",
   "license": "MIT",
   "repository": "taoyuan/lacl",
