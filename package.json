@@ -1,7 +1,7 @@
 {
   "name": "lacl",
   "version": "0.0.0",
-  "description": "A Light Access Control Lists based on loopback junggler",
+  "description": "A Light Access Control Lists for nodejs",
   "license": "MIT",
   "repository": "taoyuan/lacl",
   "author": {
@@ -12,14 +12,22 @@
   "engines": {
     "node": ">=4"
   },
+  "main": "./lib/index.js",
   "scripts": {
     "test": "nyc ava -s test/**/*.test.js"
   },
-  "files": [
-    "index.js"
-  ],
   "keywords": [
-    ""
+    "node",
+    "acl",
+    "security",
+    "role",
+    "user",
+    "allow",
+    "disallow",
+    "permission",
+    "resource",
+    "row",
+    "level"
   ],
   "dependencies": {
     "bluebird": "^3.4.6",
