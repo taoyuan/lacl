@@ -13,10 +13,10 @@ test.after(t => s.teardown(ctx));
 test.beforeEach(t => s.clearData());
 
 test('should add role user', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member'})
+		Roles.create('member')
 	]).then(([role]) => {
 		return acl.addRoleUsers(role, 'user-1').then(mappings => {
 			t.is(mappings.length, 1);
@@ -29,10 +29,10 @@ test('should add role user', t => {
 });
 
 test('should add user role', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member'})
+		Roles.create('member')
 	]).then(([role]) => {
 		return acl.addUserRoles('user-1', role).then(mappings => {
 			t.is(mappings.length, 1);
@@ -45,10 +45,10 @@ test('should add user role', t => {
 });
 
 test('should remove user roles', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member'})
+		Roles.create('member')
 	]).then(([role]) => {
 		return acl.addUserRoles('user-1', role)
 			.then(() => {
@@ -68,10 +68,10 @@ test('should remove user roles', t => {
 });
 
 test('should remove role users', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member'})
+		Roles.create('member')
 	]).then(([role]) => {
 		return acl.addRoleUsers(role, 'user-1')
 			.then(() => {
@@ -91,10 +91,10 @@ test('should remove role users', t => {
 });
 
 test('should has role by role id', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member'})
+		Roles.create('member')
 	]).then(([role]) => {
 		return acl.addRoleUsers(role, 'user-1').then(() => {
 			return acl.hasRole('user-1', role).then(hasRole => {
@@ -106,10 +106,10 @@ test('should has role by role id', t => {
 
 
 test('should has role by role name', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member'})
+		Roles.create('member')
 	]).then(([role]) => {
 		return acl.addRoleUsers(role, 'user-1')
 			.then(() => {
@@ -126,10 +126,10 @@ test('should has role by role name', t => {
 
 
 test('should has role by role name with scope', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1')
 	]).then(([role]) => {
 		return acl.addRoleUsers(role, 'user-1')
 			.then(() => {
@@ -147,10 +147,10 @@ test('should has role by role name with scope', t => {
 
 
 test('should remove role by id', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1')
 	]).then(([role]) => {
 		return acl.addRoleUsers(role, 'user-1')
 			.then(() => {
@@ -165,16 +165,16 @@ test('should remove role by id', t => {
 				})
 			})
 			.then(() => {
-				return Role.findById(role.id).then(r => t.falsy(r));
+				return Roles.findById(role.id).then(r => t.falsy(r));
 			})
 	});
 });
 
 test('should remove role by name', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1')
 	]).then(([role]) => {
 		return acl.addRoleUsers(role, 'user-1')
 			.then(() => {
@@ -189,16 +189,17 @@ test('should remove role by name', t => {
 				})
 			})
 			.then(() => {
-				return Role.findById(role.id).then(r => t.falsy(r));
+				return Roles.findById(role.id).then(r => t.falsy(r));
 			})
 	});
 });
 
 test('should allow', t => {
-	const {Role, Permission} = lacl;
+	const {Permission} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1')
 	]).then(([role]) => {
 		return acl.allow(role, 'article:1', ['read'])
 			.then(() => Permission.find())
@@ -208,17 +209,18 @@ test('should allow', t => {
 				t.deepEqual(permission.actions, ['READ']);
 				t.is(permission.resourceType, 'article');
 				t.is(permission.resourceId, '1');
-				t.is(permission.subjectType, Role.modelName);
+				t.is(permission.subjectType, acl.Role.modelName);
 				t.is(permission.subjectId, role.id);
 			});
 	});
 });
 
 test('should disallow', t => {
-	const {Role, Permission} = lacl;
+	const {Permission} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1')
 	]).then(([role]) => {
 		return acl.allow(role, 'article:1', ['read', 'write'])
 			.then(() => Permission.find())
@@ -227,7 +229,7 @@ test('should disallow', t => {
 				t.deepEqual(permissions[0].actions, ['READ', 'WRITE']);
 				t.is(permissions[0].resourceType, 'article');
 				t.is(permissions[0].resourceId, '1');
-				t.is(permissions[0].subjectType, Role.modelName);
+				t.is(permissions[0].subjectType, acl.Role.modelName);
 				t.is(permissions[0].subjectId, role.id);
 			})
 			.then(() => acl.disallow(role, 'article:1', ['write']))
@@ -240,11 +242,11 @@ test('should disallow', t => {
 });
 
 test('should get allowed permissions', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1')
 	]).then(([role1, role2]) => {
 		return Promise.all([
 			acl.allow(role1, 'article:1', ['read', 'write']),
@@ -263,11 +265,11 @@ test('should get allowed permissions', t => {
 });
 
 test('should is allowed', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1')
 	]).then(([role1, role2]) => {
 		return Promise.all([
 			acl.allow(role1, 'article:1', ['read', 'write']),
@@ -283,11 +285,11 @@ test('should is allowed', t => {
 });
 
 test('should is allowed for the resource that not exited in permission collection', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1')
 	]).then(([role1, role2]) => {
 		return Promise.all([
 			acl.allow(role1, 'article:1', ['read', 'write']),
@@ -299,11 +301,11 @@ test('should is allowed for the resource that not exited in permission collectio
 });
 
 test('should get allowed resources for all resource types', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1')
 	]).then(([role1, role2]) => {
 		return Promise.each([
 			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
@@ -326,11 +328,11 @@ test('should get allowed resources for all resource types', t => {
 });
 
 test('should get allowed resources for specified type', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1')
 	], fn => fn()).then(([role1, role2]) => {
 		return Promise.each([
 			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
@@ -350,11 +352,11 @@ test('should get allowed resources for specified type', t => {
 });
 
 test('should get disallowed resources for all resource types', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'}),
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1'),
 	]).then(([role1, role2]) => {
 		return Promise.each([
 			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
@@ -376,11 +378,11 @@ test('should get disallowed resources for all resource types', t => {
 });
 
 test('should allowed resources for specified type', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1')
 	]).then(([role1, role2]) => {
 		return Promise.each([
 			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
@@ -401,11 +403,11 @@ test('should allowed resources for specified type', t => {
 });
 
 test('should remove all permissions for resource type', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1')
 	]).then(([role1, role2]) => {
 		return Promise.each([
 			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
@@ -425,11 +427,11 @@ test('should remove all permissions for resource type', t => {
 });
 
 test('should remove all permissions for individual resource', t => {
-	const {Role} = lacl;
 	const acl = new lacl.Acl();
+	const {Roles} = acl;
 	return Promise.all([
-		Role.create({name: 'member', scopeType: 'org', scopeId: 'org-1'}),
-		Role.create({name: 'leader', scopeType: 'org', scopeId: 'org-1'})
+		Roles.create('member', 'org:org-1'),
+		Roles.create('leader', 'org:org-1')
 	]).then(([role1, role2]) => {
 		return Promise.each([
 			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),

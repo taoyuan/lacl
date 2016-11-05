@@ -53,3 +53,37 @@ test('should find by scope', t => {
 	});
 });
 
+test('should remove role', t => {
+	const acl = new lacl.Acl();
+	return Promise.all([
+		acl.roles.create('member'),
+		acl.roles.create('member', 'org'),
+		acl.roles.create('member', 'org:bar')
+	]).then(() => {
+		return acl.roles.count('member')
+			.then(count => t.truthy(count))
+			.then(() => acl.roles.count('member', 'org'))
+			.then(count => t.truthy(count))
+			.then(() => acl.roles.count('member', 'org:bar'))
+			.then(count => t.truthy(count))
+
+			.then(() => acl.roles.remove('member'))
+			.then(() => acl.roles.count('member'))
+			.then(count => t.falsy(count))
+			.then(() => acl.roles.count('member', 'org'))
+			.then(count => t.truthy(count))
+			.then(() => acl.roles.count('member', 'org:bar'))
+			.then(count => t.truthy(count))
+
+			.then(() => acl.roles.remove('member', 'org'))
+			.then(() => acl.roles.count('member', 'org'))
+			.then(count => t.falsy(count))
+			.then(() => acl.roles.count('member', 'org:bar'))
+			.then(count => t.truthy(count))
+
+			.then(() => acl.roles.remove('member', 'org:bar'))
+			.then(() => acl.roles.count('member', 'org:bar'))
+			.then(count => t.falsy(count))
+	});
+});
+
