@@ -1,6 +1,5 @@
 {
 	"name": "AclAbility",
-	"plural": "aclabilities",
 	"base": "PersistedModel",
 	"properties": {
 		"resource": {

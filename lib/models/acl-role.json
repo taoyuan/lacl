@@ -1,6 +1,5 @@
 {
 	"name": "AclRole",
-	"plural": "aclroles",
 	"base": "PersistedModel",
 	"properties": {
 		"id": {
@@ -49,15 +48,30 @@
 			"polymorphic": "subject"
 		}
 	},
-	"ability": {
-		"actions": [
-			"READ",
-			"ASSIGN_MEMBERS",
-			"DEFINE_PERMISSIONS",
-			"ASSIGN_PERMISSIONS",
-			"WRITE",
-			"DELETE"
+	"security": {
+		"acls": [
+			{
+				"action": "create",
+				"property": "create"
+			},
+			{
+				"action": "read",
+				"property": "find"
+			},
+			{
+				"action": "write",
+				"property": "updateById"
+			},
+			{
+				"action": "delete",
+				"property": "destroyById"
+			}
 		],
-		"*:leader": "*"
+		"roles": [
+			{
+				"role": "member@Team",
+				"actions": ["read"]
+			}
+		]
 	}
 }

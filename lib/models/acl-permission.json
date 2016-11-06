@@ -1,6 +1,5 @@
 {
 	"name": "AclPermission",
-	"plural": "aclpermissions",
 	"base": "PersistedModel",
 	"properties": {
 		"id": {

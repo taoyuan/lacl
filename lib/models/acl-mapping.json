@@ -1,6 +1,5 @@
 {
 	"name": "AclMapping",
-	"plural": "aclmappings",
 	"base": "PersistedModel",
 	"properties": {
 		"userId": {
