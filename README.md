@@ -1,12 +1,12 @@
-# lacl [![Build Status](https://travis-ci.org/taoyuan/lacl.svg?branch=master)](https://travis-ci.org/taoyuan/lacl) [![Coverage Status](https://coveralls.io/repos/github/taoyuan/lacl/badge.svg?branch=master)](https://coveralls.io/github/taoyuan/lacl?branch=master)
+# sacl [![Build Status](https://travis-ci.org/taoyuan/sacl.svg?branch=master)](https://travis-ci.org/taoyuan/sacl) [![Coverage Status](https://coveralls.io/repos/github/taoyuan/sacl/badge.svg?branch=master)](https://coveralls.io/github/taoyuan/sacl?branch=master)
 
-> A Light Access Control Lists for nodejs
+> The Scoped Access Control Lists library for nodejs
 
 
 ## Install
 
 ```
-$ npm install --save lacl
+$ npm install --save sacl
 ```
 
 

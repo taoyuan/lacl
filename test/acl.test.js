@@ -4,7 +4,7 @@ const test = require('ava');
 const assert = require('chai').assert;
 const Promise = require('bluebird');
 const s = require('./support');
-const lacl = require('..');
+const sacl = require('..');
 
 const ctx = {};
 test.before(t => s.setup(ctx));

@@ -1,9 +1,9 @@
 {
-  "name": "lacl",
+  "name": "sacl",
   "version": "0.1.3",
-  "description": "A Light Access Control Lists for nodejs",
+  "description": "The Scoped Access Control Lists library for nodejs",
   "license": "MIT",
-  "repository": "taoyuan/lacl",
+  "repository": "taoyuan/sacl",
   "author": {
     "name": "Yuan Tao",
     "email": "towyuan@outlook.com",

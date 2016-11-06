@@ -3,14 +3,14 @@
 const _ = require('lodash');
 const Promise = require('bluebird');
 const loopback = require('loopback');
-const lacl = require('..');
+const sacl = require('..');
 
 require('../lib/contract').debug = true;
 
 const ds = loopback.createDataSource('mongodb://localhost');
 
 exports.setup = function (ctx) {
-	ctx.acl = lacl.acl(ds);
+	ctx.acl = sacl.acl(ds);
 };
 
 exports.teardown = function (ctx) {
