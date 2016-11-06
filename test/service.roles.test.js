@@ -3,16 +3,15 @@
 const test = require('ava');
 const Promise = require('bluebird');
 const s = require('./support');
-const lacl = require('..');
 
 const ctx = {};
 test.before(t => s.setup(ctx));
 test.after(t => s.teardown(ctx));
 
-test.beforeEach(t => s.clearData());
+test.beforeEach(t => s.clearData(ctx));
 
 test('should find regular roles', t => {
-	const acl = new lacl.Acl();
+	const acl = ctx.acl;
 	return Promise.all([
 		acl.roles.create('member'),
 		acl.roles.create('member', 'org'),
@@ -26,7 +25,7 @@ test('should find regular roles', t => {
 });
 
 test('should find by type', t => {
-	const acl = new lacl.Acl();
+	const acl = ctx.acl;
 	return Promise.all([
 		acl.roles.create('member'),
 		acl.roles.create('member', 'org'),
@@ -40,7 +39,7 @@ test('should find by type', t => {
 });
 
 test('should find by scope', t => {
-	const acl = new lacl.Acl();
+	const acl = ctx.acl;
 	return Promise.all([
 		acl.roles.create('member'),
 		acl.roles.create('member', 'org'),
@@ -54,7 +53,7 @@ test('should find by scope', t => {
 });
 
 test('should remove role', t => {
-	const acl = new lacl.Acl();
+	const acl = ctx.acl;
 	return Promise.all([
 		acl.roles.create('member'),
 		acl.roles.create('member', 'org'),

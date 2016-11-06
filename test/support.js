@@ -7,26 +7,16 @@ const lacl = require('..');
 
 require('../lib/contract').debug = true;
 
-exports.connect = function (ctx) {
-	ctx = ctx || {};
-	const db = ctx.db = loopback.createDataSource('db', {connector: 'mongodb', database: 'lacl-test'});
-	return Promise.resolve(db.automigrate())
-		.then(() => _.forEach(lacl.models, model => model.attachTo(db)))
-		.thenReturn(db);
-};
-
-exports.disconnect = function (ctx) {
-	return ctx.db.disconnect();
-};
+const ds = loopback.createDataSource('mongodb://localhost');
 
 exports.setup = function (ctx) {
-	return exports.connect(ctx);
+	ctx.acl = lacl.acl(ds);
 };
 
 exports.teardown = function (ctx) {
-	return exports.clearData().then(() => exports.disconnect(ctx));
+	return exports.clearData(ctx);
 };
 
-exports.clearData = function () {
-	return Promise.map(_.values(lacl.models), model => model.destroyAll());
+exports.clearData = function (ctx) {
+	return Promise.map(_.values(ctx.acl.models), model => model.destroyAll());
 };

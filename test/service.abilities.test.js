@@ -4,16 +4,15 @@ const test = require('ava');
 const assert = require('chai').assert;
 const Promise = require('bluebird');
 const s = require('./support');
-const lacl = require('..');
 
 const ctx = {};
 test.before(t => s.setup(ctx));
 test.after(t => s.teardown(ctx));
 
-test.beforeEach(t => s.clearData());
+test.beforeEach(t => s.clearData(ctx));
 
 test('should add actions', t => {
-	const acl = new lacl.Acl();
+	const acl = ctx.acl;
 	const {abilities} = acl;
 	return abilities.addActions('Article', ['read', 'CREATE', 'UPDATE'])
 		.then(ability => {
@@ -42,7 +41,7 @@ test('should add actions', t => {
 });
 
 test('should fail for unmatched updated time', t => {
-	const acl = new lacl.Acl();
+	const acl = ctx.acl;
 	const {abilities} = acl;
 	return abilities.addActions('Article', ['read', 'CREATE', 'UPDATE'])
 		.then(ability => {
@@ -62,7 +61,7 @@ test('should fail for unmatched updated time', t => {
 });
 
 test.only('should add static actions for model', t => {
-	const acl = new lacl.Acl();
+	const acl = ctx.acl;
 	const {abilities, Role} = acl;
 	return abilities.addStaticActions(Role)
 		.then(ability => {
