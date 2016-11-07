@@ -334,16 +334,18 @@ test('should get allowed resources for specified type', t => {
 	], fn => fn()).then(([role1, role2]) => {
 		return Promise.each([
 			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
+			() => acl.allow(role1, 'article:2', ['read']),
+			() => acl.allow(role2, 'article:2', []),
+			() => acl.allow(role2, 'article:3', ['delete']),
 			() => acl.allow(role2, 'photo', ['view', 'delete']),
-			() => acl.allow(role2, 'article:9', []),
 			() => acl.allow('tom', 'report', ['view', 'design']),
 		], fn => fn())
-			.then(() => acl.addUserRoles('tom', [role1, role2]))
+			.then(() => acl.addUserRoles('tom', [role1]))
 			.then(() => acl.allowedResources('tom', 'view', 'article'))
 			.then(resources => {
 				assert.sameDeepMembers(resources, [
 					{type: 'article', id: '1'},
-					{type: 'article', id: '9'}
+					{type: 'article', id: '2'}
 				]);
 			});
 	});
@@ -357,19 +359,23 @@ test('should get disallowed resources for all resource types', t => {
 		Roles.create('leader', 'org:org-1'),
 	]).then(([role1, role2]) => {
 		return Promise.each([
-			() => acl.allow(role1, 'article:1', ['view', 'read', 'write']),
-			() => acl.allow(role1, 'folder:1', ['view', 'read', 'write']),
-			() => acl.allow(role2, 'photo', ['view', 'delete']),
-			() => acl.allow(role2, 'article:9', []),
+			() => acl.allow(role1, 'photo', ['view', 'delete']),
+			() => acl.allow(role1, 'article:1', []),
+			() => acl.allow(role2, 'article:1', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'article:2', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'folder:1', ['view', 'read', 'write']),
+			() => acl.allow(role2, 'folder:2', ['read', 'write']),
 			() => acl.allow('tom', 'report', ['view', 'design']),
 			() => acl.allow('tom', 'photo', ['view', 'update']),
 		], fn => fn())
-			.then(() => acl.addUserRoles('tom', [role2]))
+			.then(() => acl.addUserRoles('tom', [role1]))
 			.then(() => acl.disallowedResources('tom', 'view'))
 			.then(resources => {
 				assert.sameDeepMembers(resources, [
 					{type: 'article', id: '1'},
+					{type: 'article', id: '2'},
 					{type: 'folder', id: '1'},
+					{type: 'folder', id: '2'},
 				]);
 			});
 	});
