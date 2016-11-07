@@ -4,7 +4,6 @@ const test = require('ava');
 const assert = require('chai').assert;
 const Promise = require('bluebird');
 const s = require('./support');
-const sacl = require('..');
 
 const ctx = {};
 test.before(t => s.setup(ctx));
@@ -194,6 +193,36 @@ test('should remove role by name', t => {
 	});
 });
 
+test('should get all roles includes inherits', () => {
+	const acl = ctx.acl;
+	const {Roles} = acl;
+	return Promise.all([
+		Roles.create('A'),
+		Roles.create('B'),
+		Roles.create('C'),
+		Roles.create('D'),
+		Roles.create('ABC'),
+		Roles.create('BCD'),
+		Roles.create('ABCD'),
+	]).then(([A, B, C, D, ABC, BCD, ABCD]) => {
+		return Promise.all([
+			Roles.inherit(ABC, [A, B, C]),
+			Roles.inherit(BCD, [B, C, D]),
+			Roles.inherit(ABCD, [ABC, BCD]),
+		]).then(() => {
+			return acl._allRoles([ABC, BCD])
+				.then(roles => {
+					assert.sameDeepMembers(roles.map(p => p.name), ['A', 'B', 'C', 'D', 'ABC', 'BCD']);
+				})
+				.then(() => acl._allRoles(ABCD))
+				.then(roles => {
+					assert.sameDeepMembers(roles.map(p => p.name), ['A', 'B', 'C', 'D', 'ABC', 'BCD', 'ABCD']);
+				})
+		});
+	});
+});
+
+
 test('should allow', t => {
 	const acl = ctx.acl;
 	const {Roles, Permission} = acl;
@@ -298,7 +327,7 @@ test('should is allowed for the resource that not exited in permission collectio
 	});
 });
 
-test('should get allowed resources for all resource types', t => {
+test('should get allowed resources for all resource types', () => {
 	const acl = ctx.acl;
 	const {Roles} = acl;
 	return Promise.all([
@@ -325,7 +354,7 @@ test('should get allowed resources for all resource types', t => {
 	});
 });
 
-test('should get allowed resources for specified type', t => {
+test('should get allowed resources for specified type', () => {
 	const acl = ctx.acl;
 	const {Roles} = acl;
 	return Promise.all([
@@ -351,7 +380,33 @@ test('should get allowed resources for specified type', t => {
 	});
 });
 
-test('should get disallowed resources for all resource types', t => {
+test('should get allowed resources includes inherits', () => {
+	const acl = ctx.acl;
+	const {Roles} = acl;
+	return Promise.all([
+		Roles.create('A'),
+		Roles.create('B'),
+		Roles.create('AB'),
+	]).then(([A, B, AB]) => {
+		return Promise.each([
+			() => Roles.inherit(AB, [A, B]),
+			() => acl.addUserRoles('tom', [AB]),
+			() => acl.allow(A, 'article:1', ['view']),
+			() => acl.allow(B, 'photo:1', ['view']),
+			() => acl.allow('tom', 'report', ['view']),
+		], fn => fn())
+			.then(() => acl.allowedResources('tom', 'view'))
+			.then(resources => {
+				assert.sameDeepMembers(resources, [
+					{type: 'article', id: '1'},
+					{type: 'photo', id: '1'},
+					{type: 'report', id: null}
+				]);
+			});
+	});
+});
+
+test('should get disallowed resources for all resource types', () => {
 	const acl = ctx.acl;
 	const {Roles} = acl;
 	return Promise.all([
@@ -381,7 +436,33 @@ test('should get disallowed resources for all resource types', t => {
 	});
 });
 
-test('should allowed resources for specified type', t => {
+test('should get disallowed resources includes inherits', () => {
+	const acl = ctx.acl;
+	const {Roles} = acl;
+	return Promise.all([
+		Roles.create('A'),
+		Roles.create('B'),
+		Roles.create('C'),
+		Roles.create('AB'),
+	]).then(([A, B, C, AB]) => {
+		return Promise.each([
+			() => Roles.inherit(AB, [A, B]),
+			() => acl.addUserRoles('tom', [AB]),
+			() => acl.allow(A, 'article:1', ['view']),
+			() => acl.allow(B, 'photo:1', ['view']),
+			() => acl.allow(C, 'folder:1', ['view']),
+			() => acl.allow('tom', 'report', ['view']),
+		], fn => fn())
+			.then(() => acl.disallowedResources('tom', 'view'))
+			.then(resources => {
+				assert.sameDeepMembers(resources, [
+					{type: 'folder', id: '1'},
+				]);
+			});
+	});
+});
+
+test('should allowed resources for specified type', () => {
 	const acl = ctx.acl;
 	const {Roles} = acl;
 	return Promise.all([
@@ -406,7 +487,7 @@ test('should allowed resources for specified type', t => {
 	});
 });
 
-test('should remove all permissions for resource type', t => {
+test('should remove all permissions for resource type', () => {
 	const acl = ctx.acl;
 	const {Roles} = acl;
 	return Promise.all([
@@ -430,7 +511,7 @@ test('should remove all permissions for resource type', t => {
 	});
 });
 
-test('should remove all permissions for individual resource', t => {
+test('should remove all permissions for individual resource', () => {
 	const acl = ctx.acl;
 	const {Roles} = acl;
 	return Promise.all([
