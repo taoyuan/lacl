@@ -13,27 +13,27 @@ test.beforeEach(t => s.clearData(ctx));
 
 test('should add actions', t => {
 	const acl = ctx.acl;
-	const {abilities} = acl;
-	return abilities.addActions('Article', ['read', 'CREATE', 'UPDATE'])
+	const {Abilities} = acl;
+	return Abilities.addActions('Article', ['read', 'CREATE', 'UPDATE'])
 		.then(ability => {
 			assert.ok(ability);
-			return abilities.findOne({where: {resource: 'Article'}}).then(ability => {
+			return Abilities.findByResource('Article').then(ability => {
 				assert.ok(ability);
 				assert.sameMembers(ability.actions, ['READ', 'CREATE', 'UPDATE']);
 			});
 		})
-		.then(() => abilities.addActions('Article', ['read', 'APPROVAL']))
+		.then(() => Abilities.addActions('Article', ['read', 'APPROVAL']))
 		.then(ability => {
 			assert.ok(ability);
-			return abilities.findOne({where: {resource: 'Article'}}).then(ability => {
+			return Abilities.findByResource('Article').then(ability => {
 				assert.ok(ability);
 				assert.sameMembers(ability.actions, ['READ', 'CREATE', 'UPDATE', 'APPROVAL']);
 			});
 		})
-		.then(() => abilities.addActions('Article:123', ['COMMENT']))
+		.then(() => Abilities.addActions('Article:123', ['COMMENT']))
 		.then(ability => {
 			assert.ok(ability);
-			return abilities.findOne({where: {resource: 'Article'}}).then(ability => {
+			return Abilities.findByResource('Article').then(ability => {
 				assert.ok(ability);
 				assert.sameMembers(ability.actions, ['READ', 'CREATE', 'UPDATE', 'APPROVAL', 'COMMENT']);
 			});
@@ -46,7 +46,7 @@ test('should fail for unmatched updated time', t => {
 	return abilities.addActions('Article', ['read', 'CREATE', 'UPDATE'])
 		.then(ability => {
 			assert.ok(ability);
-			return abilities.findOne({where: {resource: 'Article'}}).then(ability => {
+			return abilities.findByResource('Article').then(ability => {
 				assert.ok(ability);
 				assert.sameMembers(ability.actions, ['READ', 'CREATE', 'UPDATE']);
 			});
@@ -60,15 +60,3 @@ test('should fail for unmatched updated time', t => {
 		}));
 });
 
-test.only('should add static actions for model', t => {
-	const acl = ctx.acl;
-	const {abilities, Role} = acl;
-	return abilities.addStaticActions(Role)
-		.then(ability => {
-			assert.ok(ability);
-			return abilities.findByResource(Role).then(ability => {
-				assert.ok(ability);
-				assert.ok(ability.actions.length);
-			});
-		})
-});
