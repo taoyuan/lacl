@@ -544,7 +544,7 @@ test('should remove all permissions for resource type', () => {
 			() => acl.allow('tom', 'photo', ['view', 'update']),
 		], fn => fn())
 			.then(() => acl.addUserRoles('tom', [role1, role2]))
-			.then(() => acl.removeResource('article'))
+			.then(() => acl.removePermissionsByResource('article'))
 			.then(() => acl.allowedResources('tom', 'view', 'article'))
 			.then(resources => {
 				assert.sameDeepMembers(resources, []);
@@ -568,7 +568,7 @@ test('should remove all permissions for individual resource', () => {
 			() => acl.allow('tom', 'photo', ['view', 'update']),
 		], fn => fn())
 			.then(() => acl.addUserRoles('tom', [role1, role2]))
-			.then(() => acl.removeResource('article:1'))
+			.then(() => acl.removePermissionsByResource('article:1'))
 			.then(() => acl.allowedResources('tom', 'view', 'article'))
 			.then(resources => {
 				assert.sameDeepMembers(resources, [
