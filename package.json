@@ -1,6 +1,6 @@
 {
   "name": "sacl",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "The Scoped Access Control Lists library for nodejs",
   "license": "MIT",
   "repository": "taoyuan/sacl",
