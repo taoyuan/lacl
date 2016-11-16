@@ -60,29 +60,29 @@ test('should remove role', t => {
 		acl.roles.create('member', 'org'),
 		acl.roles.create('member', 'org:bar')
 	]).then(() => {
-		return acl.roles.countByNameAndScope('member')
+		return acl.roles.countByScope(null, 'member')
 			.then(count => t.truthy(count))
-			.then(() => acl.roles.countByNameAndScope('member', 'org'))
+			.then(() => acl.roles.countByScope('org', 'member'))
 			.then(count => t.truthy(count))
-			.then(() => acl.roles.countByNameAndScope('member', 'org:bar'))
+			.then(() => acl.roles.countByScope('org:bar', 'member'))
 			.then(count => t.truthy(count))
 
-			.then(() => acl.roles.removeByNameAndScope('member'))
-			.then(() => acl.roles.countByNameAndScope('member'))
+			.then(() => acl.roles.removeByScope(null, 'member'))
+			.then(() => acl.roles.countByScope(null, 'member'))
 			.then(count => t.falsy(count))
-			.then(() => acl.roles.countByNameAndScope('member', 'org'))
+			.then(() => acl.roles.countByScope('org', 'member'))
 			.then(count => t.truthy(count))
-			.then(() => acl.roles.countByNameAndScope('member', 'org:bar'))
+			.then(() => acl.roles.countByScope('org:bar', 'member'))
 			.then(count => t.truthy(count))
 
-			.then(() => acl.roles.removeByNameAndScope('member', 'org'))
-			.then(() => acl.roles.countByNameAndScope('member', 'org'))
+			.then(() => acl.roles.removeByScope('org', 'member'))
+			.then(() => acl.roles.countByScope('org', 'member'))
 			.then(count => t.falsy(count))
-			.then(() => acl.roles.countByNameAndScope('member', 'org:bar'))
+			.then(() => acl.roles.countByScope('org:bar', 'member'))
 			.then(count => t.truthy(count))
 
-			.then(() => acl.roles.removeByNameAndScope('member', 'org:bar'))
-			.then(() => acl.roles.countByNameAndScope('member', 'org:bar'))
+			.then(() => acl.roles.removeByScope('org:bar', 'member'))
+			.then(() => acl.roles.countByScope('org:bar', 'member'))
 			.then(count => t.falsy(count))
 	});
 });
