@@ -14,7 +14,7 @@
   },
   "main": "./lib/index.js",
   "scripts": {
-    "test": "nyc ava -s test/**/*.test.js"
+    "test": "nyc mocha test/**/*.test.js"
   },
   "keywords": [
     "node",
@@ -32,8 +32,9 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "debug": "^2.3.2",
+    "depd": "^1.1.0",
     "joi": "^9.2.0",
-    "lodash": "^4.17.1",
+    "lodash": "^4.17.2",
     "shortid": "^2.2.6",
     "strong-globalize": "^2.8.0"
   },
@@ -41,15 +42,11 @@
     "loopback": "^2.36.0"
   },
   "devDependencies": {
-    "ava": "avajs/ava",
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "loopback-connector-mongodb": "^1.17.0",
-    "nyc": "^9.0.1",
-    "xo": "^0.17.1"
-  },
-  "xo": {
-    "esnext": true
+    "mocha": "^3.1.2",
+    "nyc": "^9.0.1"
   },
   "nyc": {
     "reporter": [

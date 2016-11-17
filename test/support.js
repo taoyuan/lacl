@@ -8,9 +8,10 @@ const sacl = require('..');
 require('../lib/contract').debug = true;
 
 const ds = loopback.createDataSource('mongodb://localhost');
+const acl = sacl.acl(ds);
 
 exports.setup = function (ctx) {
-	ctx.acl = sacl.acl(ds);
+	ctx.acl = acl;
 };
 
 exports.teardown = function (ctx) {
@@ -18,5 +19,5 @@ exports.teardown = function (ctx) {
 };
 
 exports.clearData = function (ctx) {
-	return Promise.map(_.values(ctx.acl.models), model => model.destroyAll());
+	return _.has(ctx, 'acl.models') && Promise.map(_.values(ctx.acl.models), model => model.destroyAll());
 };
